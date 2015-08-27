@@ -1,0 +1,44 @@
+name:                cassandra-th
+version:             0.1.0.0
+synopsis:            A DSL and supporting Template Haskell for Cassandra schemas.
+description:         Please see README.md
+homepage:            http://github.com/name/project
+license:             BSD3
+license-file:        LICENSE
+author:              Bradley Hardy
+maintainer:          bradleyhardy@live.com
+copyright:           (c) Bradley Hardy 2015
+category:            Database
+build-type:          Simple
+-- extra-source-files:  
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Cassandra
+                     , Cassandra.Schema
+                     , Cassandra.SchemaPrinter
+                     , Cassandra.QQ
+                     , Cassandra.TH
+                     , Cassandra.RecordTH
+                     , Test
+  build-depends:       Decimal >= 0.4.2
+                     , base >= 4.7 && < 5
+                     , bytestring
+                     , containers >= 0.5
+                     , cql
+                     , cql-io
+                     , lens >= 4.12
+                     , mtl >= 2
+                     , parsec
+                     , split
+                     , syb
+                     , template-haskell >= 2.10
+                     , text
+                     , uuid
+                     , time >= 1.5
+  default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/whosup/cassandra-th
