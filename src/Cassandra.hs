@@ -29,6 +29,7 @@ import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as Text
 
 import Data.Monoid
+import Control.Monad
 
 type family PartitionKey table
 
@@ -183,14 +184,19 @@ selectByPartitionKey' pk = do
     RsResult _ (RowsResult _ rows) -> map asRecord rows
     _ -> []
 
+chunk :: Int -> [a] -> [[a]]
+chunk _ [] = []
+chunk n xs = case splitAt n xs of
+  (chunk1, rest) -> chunk1 : chunk n rest
+
 cassInsert'
   :: forall a t pk m. (MonadClient m, Queryable pk t a, Show t)
      => [a] -> m ()
 cassInsert' [] = return ()
-cassInsert' rows = batch $ do
+cassInsert' rows = forM_ (chunk 10 rows) $ \ rows' -> batch $ do
   setConsistency One
   let theQuery = queryInsert (Proxy :: Proxy a)
-  mapM_ (addQuery theQuery . asTuple) rows
+  mapM_ (addQuery theQuery . asTuple) rows'
 
 cassDelete'
   :: (MonadClient m, Queryable pk t a, Show t)
